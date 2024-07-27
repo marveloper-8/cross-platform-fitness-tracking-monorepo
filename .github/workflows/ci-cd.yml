@@ -1,0 +1,50 @@
+name: CI/CD
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Use Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '22'
+    
+    - name: Install dependencies (Server)
+      run: |
+        cd server
+        npm ci
+
+    - name: Run tests (Server)
+      run: |
+        cd server
+        npm test
+
+    - name: Install dependencies (Client)
+      run: |
+        cd client
+        npm ci
+    
+    - name: Run tests (Client)
+      run: |
+        cd client
+        npm test
+
+    - name: Build Docker images
+      run: |
+        docker build -t fitness-tracker-server ./server
+        docker build -t fitness-tracker-client ./client
+
+    - name: Push Docker images
+      run: |
+        echo ${{ secrets.DOCKER_PASSWORD }} | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
+        docker push fitness-tracker-server
+        docker push fitness-tracker-client
