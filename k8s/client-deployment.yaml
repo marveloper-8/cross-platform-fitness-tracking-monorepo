@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fitness-trakcer-client
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fitness-tracker-client
+  template:
+    metadata:
+      labels:
+        app: fitness-tracker-client
+    spec:
+      containers:
+      - name: fitness-tracker-client
+        image: your-registry/fitness-tracker-client:latest
+        ports:
+        - containerPort: 80

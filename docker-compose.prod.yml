@@ -1,0 +1,24 @@
+version: '3'
+services:
+  server:
+    image: your-registry/fitness-tracker-server:latest
+    environment:
+      - MONGODB_URI=mongodb
+      - NODE_ENV=production
+    deploy:
+      replicas: 3
+
+  client:
+    image: your-registry/fitness-tracker-client:latest
+    deploy:
+      replicas: 3
+  
+  mongodb:
+    image: mongo:latest
+    volumes:
+      - mongodbb_data:/data/db
+    deploy:
+      replicas: 1
+
+volumes:
+  mongodb_data:

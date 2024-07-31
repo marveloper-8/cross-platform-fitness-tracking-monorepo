@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fitness-tracker-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fitness-tracker-server
+  template:
+    metadata:
+      labels:
+        app: fitness-tracker-server
+    spec:
+      containers:
+      - name: fitness-tracker-server
+        image: your-registry/fitness-tracker-server:latest
+        ports:
+        - containerPort: 3000
+        env:
+        - name: MONGODB_URI
+          valueFrom:
+            secretKeyRef:
+              name: mongodb-secret
+              key: uri
+        - name: JWT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: jwt-secret
+              key: secret
